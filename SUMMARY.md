@@ -20,7 +20,6 @@
       * [检索实操](ch0/RepSearchPractice.md)
       * [基础任务](ch3/RepTaskBasic.md)
       * [进阶任务](ch3/RepTaskAdvanced.md)
-      * [个人教程](ch3/handbook.md)
   * [备注](ps/handbooks.md)
   * [参考文献](ps/ref.md)
   * [致谢](ps/thanks.md)
