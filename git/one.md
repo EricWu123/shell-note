@@ -25,8 +25,58 @@ git reset HEAD # 撤销add，单独撤销某个文件则为 git reset HEAD xxx.t
 git commit --amend
 ```
 
+**从远程分支origin拉取代码**
+
+```shell
+# 拉取所有分支
+git fetch origin
+# 创建一个基于远程分支的本地分支,--track 添加跟踪关系
+git checkout --track origin/<branch-name>
+# git push 会把当前的HEAD分支上所有新的提交上传到它所关联的远程分支上去。
+git push
+# 删除本地分支
+git branch -d <branch-name>
+# 删除远程分支
+git branch -dr origin/<branch-name>
+```
+
+**撤销操作**
+
+```shell
+# 修改上一次提交的注释
+git commit --amend -m "xxx"
+# 漏了某个文件，需要添加进来 或者 某个文件需要重新修改下
+git add xxx
+git commit --amend -m "xxx"
+# 法则：对于已经push到远程分支的提交，不要再试着用--amend修改
+
+# 撤销add (场景：改动了代码，已经add操作)
+git reset HEAD
+
+# 撤销commit并删除改动代码（场景：改动了代码，已经commit，但改动的有些问题，需要把这次改动的代码全部删除）
+git reset --hard HEAD^
+或者git revert HEAD
+
+# 撤销commit但不删除改动代码（场景：改动了代码，已经commit，但改动的有些问题，需要再之前的改动基础上继续修改）
+git reset --soft HEAD^
+git reset HEAD
+或者
+git reset --mixed HEAD^ # 默认模式
+
+# 放弃工作副本中的所有改动（场景：改动了代码，但尚未add）
+git reset --hard HEAD
+
+# git
+git reflog # 撤销操作
+git checkout <commit-id> # 此时会进入detached head状态
+git checkout -b <branch-name> # 给detached分支命名
+
+```
+
+
 
 **从远程拉取某个版本分支例如XXX2.0的最新代码到本地**
+
 ```
 git checkout XXX2.0
 git fetch origin XXX2.0:temp #从远程的origin仓库的master分支下载到本地并新建一个分支temp
