@@ -10,48 +10,9 @@ git add .：将文件的修改，文件的新建，添加到暂存区。
 git add -A：将文件的修改，文件的删除，文件的新建，添加到暂存区。
 
 git commit -m 'xxx'
+
 git commit -am "xxx" # 将上面两种操作合为一起
 ```
-
-
-**拉取代码**
-
-```shell
-# 拉取所有分支
-git fetch origin
-
-# 创建一个工作区分支,--track 添加跟踪关系
-git checkout --track origin/<branch-name> 或者
-git chekout -b <branch-name> origin/<branch-name>
-
-# 合并本地仓库的分支
-$ git merge origin/master
-# 或者
-$ git rebase origin/master
-
-# 拉取所有分支并合并对应分支
-git pull origin
-
-取回远程主机某个分支的更新，再与本地的指定分支合并。
-git pull <远程库名> <远程分支名>:<本地分支名>
- 
-取回远程库中的master分支，与本地的master分支进行合并更新，要写成：
-git pull origin master:master
- 
-如果是要与本地当前分支合并更新，则冒号后面的<本地分支名>可以不写
-git pull origin master
-
-git fetch origin master # 拉取远程master代码到本地仓库origin/master中
-git fetch origin master:tmp #拉取远程master代码到本地仓库origin/master中，并创建新分支tmp或者合并到tmp分支中。
-
-git branch -b branch-name: 创建并切到新分支,等同于
-git checkout -b branch-name
-
-# git push 会把当前的HEAD分支上所有新的提交上传到它所关联的远程分支上去。
-git push
-
-```
-
 **撤销操作**
 
 ```shell
@@ -64,6 +25,7 @@ git commit --amend -m "xxx"
 
 # 撤销add (场景：改动了代码，已经add操作)
 git reset HEAD
+git reset HEAD xxx-file #单独撤销某个文件
 
 # 撤销commit并删除改动代码（场景：改动了代码，已经commit，但改动的有些问题，需要把这次改动的代码全部删除）
 git reset --hard HEAD^
@@ -77,33 +39,70 @@ git reset --mixed HEAD^ # 默认模式
 
 # 放弃工作副本中的所有改动（场景：改动了代码，但尚未add）
 git reset --hard HEAD
+git checkout -- xxx-file #单个文件
 
 # git
 git reflog # 查看操作历史
 git checkout <commit-id> # 此时会进入detached head状态
 git checkout -b <branch-name> # 给detached分支命名
 
-git checkout <commit-id> <filename> #把某个文件恢复到<commit-id>时的情况。
+git checkout <commit-id> <filename> #把某个文件恢复到<commit-id>的内容。
 ```
 
+**拉取代码**
+
+```shell
+# 拉取所有分支
+git fetch origin
+
+# 从本地仓库分支创建一个工作区分支,--track 添加跟踪关系
+git checkout --track origin/<branch-name> 或者
+git chekout -b <branch-name> origin/<branch-name>
+
+# 合并本地仓库的分支
+$ git merge origin/master
+# 或者
+$ git rebase origin/master
+
+# 拉取所有分支并合并对应分支
+git pull origin
+
+# 取回远程主机某个分支的更新，再与本地的指定分支合并。
+git pull <远程库名> <远程分支名>:<本地分支名>
+ 
+# 取回远程库中的master分支，与本地的master分支进行合并更新，要写成：
+git pull origin master:master
+ 
+# 如果是要与本地当前分支合并更新，则冒号后面的<本地分支名>可以不写
+git pull origin master
+
+git fetch origin master # 拉取远程master代码到本地仓库origin/master中
+git fetch origin master:tmp #拉取远程master代码到本地仓库origin/master中，并创建新分支tmp或者合并到tmp分支中。
+
+git branch -b branch-name: 创建并切到新分支,等同于
+git checkout -b branch-name
+
+# git push 会把当前的HEAD分支上所有新的提交上传到它所关联的远程分支上去。
+git push
+```
 
 
 **更新分支**
 
 ```shell
-git checkout XXX2.0
+git checkout XXX2.0 # 切换分支
 git fetch origin XXX2.0:temp #从远程的origin仓库的XXX2.0分支下载到本地并新建一个分支temp
 git diff XXX2.0 temp #比较XXX2.0分支和temp分支的不同
 git merge temp #确认可以合入后，合并temp分支到master分支
 git branch -d temp #删除temp
 
-或者
+#或者
 
 git fetch origin XXX2.0
 git diff XXX2.0 origin/XXX2.0 或者 git log XXX2.0 origin/XXX2.0 # 比较不同
 git merge origin/XXX2.0
 
-或者
+#或者直接合并
 
 git pull origin XXX.2.0
 ```
@@ -119,6 +118,7 @@ git diff --stat --name-only # 仅显示哪些文件有改动
 
 git remote show origin # 显示远程仓库和本地仓库之前的关系
 
+git branch -r # 用来查看远程分支
 git branch -a # 查看所有分支
 git branch -v
 git branch -vv # 查看每个分支的跟踪情况。
@@ -135,10 +135,11 @@ git fetch origin --prune
 然后通过以下命令删除工作区的分支
 git branch -D xxx #删除本地分支即可
 
-删除远程分支
+# 删除远程分支
 git push origin --delete xxx
+git push origin :xxx # 即推送一个空的分支上去
 
-删除本地分支
+# 删除本地分支
 git branch -d xxx
 git branch -D xxx # 强制删除
 # 删除本地仓库分支
@@ -170,79 +171,6 @@ git diff <commit-id> <commit-id> # 比较两个commit之间的差异
 配置git命令输出为彩色的：git config --global color.ui auto
 配置git使用的文本编辑器：git config --global core.editor vi
 ```
-
-**git工作区、暂存区、本地仓库、远程仓库交互命令**
-
-```
-
-
-拉取分支代码
-git fetch origin xxx
-git checkout -b xxx origin/xxx
-
-
-```
-
-## git fetch
-
-一旦远程主机的版本库有了更新（Git术语叫做commit），需要将这些更新取回本地，这时就要用到`git fetch`命令。
-
-> ```javascript
-> $ git fetch <远程主机名>
-> ```
-
-上面命令将某个远程主机的更新，全部取回本地。
-
-`git fetch`命令通常用来查看其他人的进程，因为它取回的代码对你本地的开发代码没有影响。
-
-默认情况下，`git fetch`取回所有分支（branch）的更新。如果只想取回特定分支的更新，可以指定分支名。
-
-> ```javascript
-> $ git fetch <远程主机名> <分支名>
-> ```
-
-比如，取回`origin`主机的`master`分支。
-
-> ```javascript
-> $ git fetch origin master
-> ```
-
-所取回的更新，在本地主机上要用"远程主机名/分支名"的形式读取。比如`origin`主机的`master`，就要用`origin/master`读取。
-
-`git branch`命令的`-r`选项，可以用来查看远程分支，`-a`选项查看所有分支。
-
-> ```javascript
-> $ git branch -r
-> origin/master
-> 
-> $ git branch -a
-> * master
->   remotes/origin/master
-> ```
-
-上面命令表示，本地主机的当前分支是`master`，远程分支是`origin/master`。
-
-取回远程主机的更新以后，可以在它的基础上，使用`git checkout`命令创建一个新的分支。
-
-> ```javascript
-> $ git checkout -b newBrach origin/master
-> ```
-
-上面命令表示，在`origin/master`的基础上，创建一个新分支。
-
-此外，也可以使用`git merge`命令或者`git rebase`命令，在本地分支上合并远程分支。
-
-> ```javascript
-> 
-> ```
-
-上面命令表示在当前分支上，合并`origin/master`。
-
-参考：
-
-https://www.ruanyifeng.com/blog/2014/06/git_remote.html
-
-
 
 **合并分支**
 
